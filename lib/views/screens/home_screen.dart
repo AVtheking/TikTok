@@ -2,13 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:tiktok_clone/constants.dart';
 import 'package:tiktok_clone/views/widgets/custom_icon.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int pageInd = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+          currentIndex: pageInd,
+          selectedItemColor: Colors.red,
+          unselectedItemColor: Colors.white,
+          onTap: (index) {
+            setState(() {
+              pageInd = index;
+            });
+          },
           backgroundColor: backgroundColor,
           type: BottomNavigationBarType.fixed,
           items: const [
@@ -45,7 +59,7 @@ class HomeScreen extends StatelessWidget {
               label: 'Profile',
             ),
           ]),
-      body: const Center(child: Text("HomeScreen")),
+      body: Center(child: Constants.pages[pageInd]),
     );
   }
 }
