@@ -1,6 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 class Comments {
@@ -65,11 +63,6 @@ class Comments {
           (map['likes'] as List),
         ));
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Comments.fromJson(String source) =>
-      Comments.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

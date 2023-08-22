@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:tiktok_clone/controller/video_controller.dart';
 import 'package:tiktok_clone/error_text.dart';
 import 'package:tiktok_clone/models/postVideo.dart';
@@ -42,6 +43,10 @@ class VideoScreen extends ConsumerWidget {
 
     void likingPost(PostVideo post) async {
       ref.watch(videoControllerProvider.notifier).likingPost(post);
+    }
+
+    void navigateToCommentScreen(PostVideo post) {
+      Routemaster.of(context).push('/comment_screen/${post.id}');
     }
 
     final size = MediaQuery.of(context).size;
@@ -142,7 +147,7 @@ class VideoScreen extends ConsumerWidget {
                               Column(
                                 children: [
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () => navigateToCommentScreen(post),
                                     child: const Icon(
                                       Icons.comment,
                                       size: 40,

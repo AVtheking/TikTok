@@ -12,15 +12,21 @@ class VideoPlayerItem extends StatefulWidget {
 class _VideoPlayerItemState extends State<VideoPlayerItem> {
   late VideoPlayerController videoController;
   @override
+  @override
   void initState() {
     super.initState();
+    initializeController();
+  }
+
+  // Initialize the controller asynchronously
+  Future<void> initializeController() async {
     videoController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.videoURl))
-          ..initialize().then((value) {
-            videoController.play();
-            videoController.setLooping(true);
-            videoController.setVolume(1);
-          });
+        VideoPlayerController.networkUrl(Uri.parse(widget.videoURl));
+    await videoController.initialize();
+    setState(() {
+      videoController.play();
+      videoController.setVolume(1);
+    });
   }
 
   @override

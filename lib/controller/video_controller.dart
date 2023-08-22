@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/controller/auth_controller.dart';
+import 'package:tiktok_clone/models/comments.dart';
 import 'package:tiktok_clone/models/postVideo.dart';
 import 'package:tiktok_clone/provider/firebaseProvider.dart';
 import 'package:tiktok_clone/repository/video_repository.dart';
@@ -16,7 +17,8 @@ final videoControllerProvider = StateNotifierProvider<VideoController, bool>(
     firebaseStorage: ref.read(storageProvider),
   ),
 );
-
+final commentProvider = StreamProvider.family((ref, String postId) =>
+    ref.watch(videoControllerProvider.notifier).fetchComments(postId));
 //Provider for getting posts
 final postedVideoProvider = StreamProvider(
     (ref) => ref.watch(videoControllerProvider.notifier).getPostedVideos());
@@ -107,5 +109,28 @@ class VideoController extends StateNotifier<bool> {
   void likingPost(PostVideo post) async {
     final user = _ref.read(userProvider)!;
     _videoRepository.likingPost(post, user.uid);
+  }
+
+  void addComment(
+      {required String postId,
+      required String text,
+      required BuildContext context}) async {
+    final commentId = const Uuid().v1();
+    final user = _ref.read(userProvider)!;
+    Comments comment = Comments(
+      username: user.name,
+      id: commentId,
+      uid: user.uid,
+      profilePic: user.profilePic,
+      comment: text,
+      createdAt: DateTime.now(),
+      likes: [],
+    );
+    final res = await _videoRepository.addComment(comment, postId);
+    res.fold((l) => showSnackBar(context, l.toString()), (r) => null);
+  }
+
+  Stream<List<Comments>> fetchComments(String postId) {
+    return _videoRepository.fetchComments(postId);
   }
 }
