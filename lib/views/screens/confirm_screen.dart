@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tiktok_clone/controller/video_controller.dart';
+import 'package:tiktok_clone/utl.dart';
 import 'package:tiktok_clone/views/widgets/text_input.dart';
 import 'package:video_player/video_player.dart';
 
-class ConfirmScreen extends StatefulWidget {
+class ConfirmScreen extends ConsumerStatefulWidget {
   final File videoFile;
   final String videoPath;
   const ConfirmScreen({
@@ -14,10 +17,10 @@ class ConfirmScreen extends StatefulWidget {
   });
 
   @override
-  State<ConfirmScreen> createState() => _ConfirmScreenState();
+  ConsumerState<ConfirmScreen> createState() => _ConfirmScreenState();
 }
 
-class _ConfirmScreenState extends State<ConfirmScreen> {
+class _ConfirmScreenState extends ConsumerState<ConfirmScreen> {
   late VideoPlayerController controller;
   final TextEditingController songController = TextEditingController();
   final TextEditingController captionController = TextEditingController();
@@ -39,6 +42,15 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     });
   }
 
+  void uploadVideo() {
+    ref.watch(videoControllerProvider.notifier).uploadVideo(
+          songController.text.trim(),
+          captionController.text.trim(),
+          widget.videoPath,
+          context,
+        );
+  }
+
   @override
   void dispose() {
     controller.dispose(); // Dispose the controller when the widget is disposed
@@ -47,55 +59,58 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 1.5,
-                child: VideoPlayer(controller),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SingleChildScrollView(
+    bool isLoading = ref.watch(videoControllerProvider);
+    return isLoading
+        ? loader()
+        : Scaffold(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextInputField(
-                          controller: songController,
-                          labelText: "Song name",
-                          icon: Icons.music_note),
+                    const SizedBox(
+                      height: 30,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextInputField(
-                          controller: songController,
-                          labelText: "Caption",
-                          icon: Icons.closed_caption),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      child: VideoPlayer(controller),
                     ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Share!",
-                        style: TextStyle(fontSize: 20),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextInputField(
+                                controller: songController,
+                                labelText: "Song name",
+                                icon: Icons.music_note),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextInputField(
+                                controller: captionController,
+                                labelText: "Caption",
+                                icon: Icons.closed_caption),
+                          ),
+                          ElevatedButton(
+                            onPressed: uploadVideo,
+                            child: const Text(
+                              "Share!",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+              ),
+            ),
+          );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:tiktok_clone/constants.dart';
 import 'package:tiktok_clone/views/screens/confirm_screen.dart';
 
@@ -40,7 +41,9 @@ class AddPostScreen extends StatelessWidget {
                 ),
               ),
               SimpleDialogOption(
-                onPressed: () {},
+                onPressed: () {
+                  pickVideo(ImageSource.camera, context);
+                },
                 child: const Row(
                   children: [
                     Icon(Icons.camera_alt),
@@ -55,7 +58,7 @@ class AddPostScreen extends StatelessWidget {
                 ),
               ),
               SimpleDialogOption(
-                onPressed: () {},
+                onPressed: () => Routemaster.of(context).pop(),
                 child: const Row(
                   children: [
                     Icon(Icons.cancel),

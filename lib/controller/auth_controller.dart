@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/constants.dart';
 import 'package:tiktok_clone/models/user.dart';
 import 'package:tiktok_clone/provider/firebaseProvider.dart';
-import 'package:tiktok_clone/provider/storageProvider.dart';
+import 'package:tiktok_clone/provider/storage_provider.dart';
 import 'package:tiktok_clone/repository/auth_repository.dart';
 import 'package:tiktok_clone/utl.dart';
 

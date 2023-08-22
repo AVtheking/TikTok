@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_clone/views/screens/add_post_screen.dart';
+import 'package:tiktok_clone/views/screens/video_screen.dart';
 
 var backgroundColor = Colors.black;
 var buttonColor = Colors.red[400];
@@ -7,7 +8,7 @@ var borderColor = Colors.grey;
 
 class Constants {
   static const pages = [
-    Text("Home Screen"),
+    VideoScreen(),
     Text("search Screen"),
     AddPostScreen(),
     Text("mesxsage Screen"),

@@ -48,7 +48,6 @@ class _SignUpScreen extends ConsumerState<SignUpScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
