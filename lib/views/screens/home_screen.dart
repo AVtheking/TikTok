@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/constants.dart';
+import 'package:tiktok_clone/controller/auth_controller.dart';
+import 'package:tiktok_clone/views/screens/add_post_screen.dart';
+import 'package:tiktok_clone/views/screens/profile_screen.dart';
+import 'package:tiktok_clone/views/screens/search_user_screen.dart';
+import 'package:tiktok_clone/views/screens/video_screen.dart';
 import 'package:tiktok_clone/views/widgets/custom_icon.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int pageInd = 0;
+  Widget navigateScreens(WidgetRef ref, int pageInd) {
+    final user = ref.watch(userProvider)!;
+
+    List pages = [
+      const VideoScreen(),
+      SearchScreen(),
+      const AddPostScreen(),
+      const Text("mesxsage Screen"),
+      ProfileScreen(uid: user.uid),
+    ];
+    return pages[pageInd];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'Profile',
             ),
           ]),
-      body: Center(child: Constants.pages[pageInd]),
+      body: Center(child: navigateScreens(ref, pageInd)),
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:tiktok_clone/provider/firebaseProvider.dart';
 import 'package:tiktok_clone/provider/storage_provider.dart';
 import 'package:tiktok_clone/repository/auth_repository.dart';
 import 'package:tiktok_clone/utl.dart';
+import 'package:tiktok_clone/views/screens/home_screen.dart';
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
 final authStateProvider = StreamProvider(
@@ -19,7 +20,10 @@ final authControllerProvider = StateNotifierProvider<AuthController, bool>(
         ref: ref,
         auth: ref.read(authProvider),
         storageRepository: ref.read(storageRepositoryProvider)));
-
+final searchUserProvider = StreamProvider.family(
+  (ref, String query) =>
+      ref.watch(authControllerProvider.notifier).searchUser(query),
+);
 final userDataProvider = StreamProvider.family((ref, String uid) =>
     ref.watch(authControllerProvider.notifier).getUserData(uid));
 
@@ -85,6 +89,8 @@ class AuthController extends StateNotifier<bool> {
           (r) {
             showSnackBar(context, "Register Successfully");
             _ref.read(userProvider.notifier).update((state) => r);
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: ((context) => const HomeScreen())));
           },
         );
       } else {
@@ -110,5 +116,13 @@ class AuthController extends StateNotifier<bool> {
 
   Stream<UserModel> getUserData(String uid) {
     return _authRepository.getUserData(uid);
+  }
+
+  Stream<List<UserModel>> searchUser(String query) {
+    return _authRepository.getUseOnSearch(query);
+  }
+
+  void logout() async {
+    _auth.signOut();
   }
 }

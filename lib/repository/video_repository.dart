@@ -59,7 +59,7 @@ class VideoRepository {
     }
   }
 
-  CollectionReference get _comment => _firestore.collection('comments');
+  // CollectionReference get _comment => _firestore.collection('comments');
   FutureVoid addComment(Comments comment, String postId) async {
     try {
       await _firestore
@@ -68,9 +68,8 @@ class VideoRepository {
           .collection('comments')
           .doc(comment.id)
           .set(comment.toMap());
-      return right(_post
-          .doc(comment.id)
-          .update({'commentCount': FieldValue.increment(1)}));
+      return right(
+          _post.doc(postId).update({'commentCount': FieldValue.increment(1)}));
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
@@ -81,13 +80,19 @@ class VideoRepository {
       );
     }
   }
-  Stream<List<Comments>> fetchComments(String postId){
-    return _post.doc(postId).collection('comments').snapshots().map((event) {
-      List<Comments> comments=[];
-    for(var comment in event.docs)
-    {
-      comments.add(Comments.fromMap(comment.data()));
-    }
-    })
+
+  Stream<List<Comments>> fetchComments(String postId) {
+    return _post
+        .doc(postId)
+        .collection('comments')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) {
+      List<Comments> comments = [];
+      for (var comment in event.docs) {
+        comments.add(Comments.fromMap(comment.data()));
+      }
+      return comments;
+    });
   }
 }

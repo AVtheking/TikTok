@@ -16,7 +16,7 @@ final videoControllerProvider = StateNotifierProvider<VideoController, bool>(
     ref: ref,
     firebaseStorage: ref.read(storageProvider),
   ),
-);
+); //Provider for fetching comment
 final commentProvider = StreamProvider.family((ref, String postId) =>
     ref.watch(videoControllerProvider.notifier).fetchComments(postId));
 //Provider for getting posts

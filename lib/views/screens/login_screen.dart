@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:tiktok_clone/constants.dart';
 import 'package:tiktok_clone/controller/auth_controller.dart';
 import 'package:tiktok_clone/views/widgets/text_input.dart';
@@ -11,6 +12,10 @@ class LoginScreen extends ConsumerWidget {
   void login(WidgetRef ref, BuildContext context) {
     ref.watch(authControllerProvider.notifier).loginInUser(
         emailController.text.trim(), passwordController.text.trim(), context);
+  }
+
+  void navigateToSignUpScreen(BuildContext context) {
+    Routemaster.of(context).push('/sign_up_screen');
   }
 
   @override
@@ -90,9 +95,14 @@ class LoginScreen extends ConsumerWidget {
                   "Don't have an account?",
                   style: TextStyle(fontSize: 20),
                 ),
-                Text(
-                  "Register",
-                  style: TextStyle(color: buttonColor, fontSize: 20),
+                InkWell(
+                  onTap: () {
+                    navigateToSignUpScreen(context);
+                  },
+                  child: Text(
+                    "Register",
+                    style: TextStyle(color: buttonColor, fontSize: 20),
+                  ),
                 )
               ],
             )

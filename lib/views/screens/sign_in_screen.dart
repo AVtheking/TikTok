@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:tiktok_clone/constants.dart';
 import 'package:tiktok_clone/controller/auth_controller.dart';
 import 'package:tiktok_clone/utl.dart';
@@ -17,6 +18,10 @@ class SignUpScreen extends ConsumerStatefulWidget {
 }
 
 class _SignUpScreen extends ConsumerState<SignUpScreen> {
+  void navigateToLoginScreen() {
+    Routemaster.of(context).push('/login_screen');
+  }
+
   File? profilePic;
   void selectProfileImage() async {
     final res = await pickImage();
@@ -168,9 +173,12 @@ class _SignUpScreen extends ConsumerState<SignUpScreen> {
                         "Already have an account?",
                         style: TextStyle(fontSize: 20),
                       ),
-                      Text(
-                        "Login",
-                        style: TextStyle(color: buttonColor, fontSize: 20),
+                      InkWell(
+                        onTap: navigateToLoginScreen,
+                        child: Text(
+                          "Login",
+                          style: TextStyle(color: buttonColor, fontSize: 20),
+                        ),
                       )
                     ],
                   )
